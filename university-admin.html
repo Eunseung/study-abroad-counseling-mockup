@@ -23,6 +23,22 @@
   .wf-flag b{color:#5a4310}
   .ix{font-size:11px;color:#fff;background:var(--accent);border-radius:4px;padding:2px 7px;font-family:var(--mono)}
 
+  /* 정책·상태 시연용 시나리오 전환기 */
+  .scenario-bar{background:#fff;border-bottom:1px solid var(--line2);padding:9px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;box-shadow:0 1px 2px rgba(16,24,40,.04);position:relative;z-index:20}
+  .scenario-bar strong{font-size:12px;color:var(--admin);margin-right:2px}
+  .scenario-control{display:flex;align-items:center;gap:5px;font-size:10.5px;color:var(--ink2);font-weight:700}
+  .scenario-control select{border:1px solid var(--line);border-radius:7px;background:#fff;color:var(--ink);padding:5px 8px;font:11.5px var(--sans)}
+  .scenario-summary{margin-left:auto;font-size:10.5px;color:var(--brand);font-weight:700;background:#eef3fb;border-radius:999px;padding:4px 9px}
+  .scenario-toast{position:fixed;top:86px;left:50%;transform:translateX(-50%);z-index:200;background:var(--warn);color:#fff;border-radius:8px;padding:9px 14px;font-size:12px;font-weight:700;box-shadow:0 8px 24px rgba(16,24,40,.2)}
+
+  .account-state-stage{min-height:calc(100vh - 104px);background:linear-gradient(135deg,#f5f7fb,#e8eef8);display:grid;place-items:center;padding:32px 20px}
+  .account-state-card{width:min(560px,100%);background:#fff;border:1px solid var(--line2);border-radius:16px;padding:34px;text-align:center;box-shadow:0 20px 60px rgba(31,45,61,.12)}
+  .account-state-card .state-icon{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;margin:0 auto 13px;background:#fff4e5;color:#9a5b00;font-size:25px}
+  .account-state-card h1{font-size:22px;margin:0 0 7px}
+  .account-state-card p{color:var(--ink2);font-size:13px;margin:0 auto 18px;max-width:440px}
+  .account-state-meta{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:20px;font-size:11.5px}
+  .account-state-actions{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+
   .admin-top{background:var(--admin);color:#fff;display:flex;align-items:center;gap:14px;padding:11px 18px;position:sticky;top:0;z-index:10}
   .admin-top .brand{font-weight:800;font-size:14px}
   .admin-top .path{font-size:12px;color:#9fb0c4;font-family:var(--mono)}
@@ -210,7 +226,7 @@
   table.hours th{color:var(--ink2);font-size:12px;text-align:left}
   table.hours input{border:1px solid var(--line);border-radius:6px;padding:5px 7px;font-size:12px;width:80px}
 
-   /* UV-0 등록 신청 */
+  /* UV-0 등록 신청 */
   .steps{display:flex;gap:8px;margin-bottom:18px}
   .step{flex:1;text-align:center;font-size:12px;color:var(--ink2);padding:8px;border-radius:8px;background:#fff;border:1px solid var(--line2)}
   .step.on{background:var(--brand);color:#fff;font-weight:700;border-color:var(--brand)}
@@ -266,6 +282,7 @@
   .perf tr:last-child td{border-bottom:0}
 
   @media(max-width:800px){
+    .scenario-summary{width:100%;margin-left:0;text-align:center}.scenario-control{flex:1;min-width:150px}.scenario-control select{flex:1;min-width:0}
     .auth-wrap{grid-template-columns:1fr;margin:24px auto}.auth-intro{display:none}.auth-card{padding:36px 28px;min-height:500px}
     .admin-top .path,.admin-top .right span:not(.top-link){display:none}.admin-top{padding:10px 12px}
     .shell{grid-template-columns:64px 1fr}.side .grp{font-size:0;padding:7px 4px}.side a{font-size:0;justify-content:center;padding:10px 4px}.side a::first-letter{font-size:16px}.side a .ct{font-size:9px;margin-left:-4px}
@@ -287,6 +304,7 @@
   .invrow input{flex:1;border:1px solid var(--line);border-radius:8px;padding:8px 11px;font-size:12.5px}
   .invrow select{border:1px solid var(--line);border-radius:8px;padding:8px;font-size:12.5px;font-family:var(--sans)}
   .invrow button{font-size:12.5px;font-weight:700;color:#fff;background:var(--brand);border:none;border-radius:8px;padding:8px 16px;cursor:pointer;white-space:nowrap}
+  .invrow button:disabled{background:#aeb6c4;cursor:not-allowed}
 
   /* 멤버 상세 모달 */
   .mmhead{display:flex;align-items:center;gap:12px;padding:4px 0 14px;border-bottom:1px solid var(--line2);margin-bottom:6px}
@@ -298,10 +316,146 @@
   .teamedit{display:flex;gap:8px}
   .teamedit select{flex:1;border:1px solid var(--line);border-radius:8px;padding:9px 11px;font-size:13px;font-family:var(--sans)}
   .mmnote{font-size:12px;color:#1a7f43;margin:9px 0 0;font-weight:600}
+
+  /* 모바일 인박스 전용 탐색 요소 — 데스크톱에서는 기존 3열 구조를 유지 */
+  .mobile-back-btn,.mobile-info-btn,.mobile-sheet-close,.mobile-sheet-scrim{display:none}
+
+  @media(max-width:800px){
+    html,body{max-width:100%;overflow-x:hidden}
+    body.student-sheet-open{overflow:hidden}
+    body{font-size:13px}
+    .wf-flag{padding:6px 10px;font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+    /* 시나리오는 한 줄을 유지하며 좌우 스와이프로 모든 조건을 선택 */
+    .scenario-bar{padding:7px 10px;gap:8px;flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-inline:contain;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+    .scenario-bar strong,.scenario-control,.scenario-summary{flex:0 0 auto}
+    .scenario-control{min-width:0;font-size:10px;gap:4px}
+    .scenario-control select{width:auto;max-width:170px;padding:5px 24px 5px 7px;font-size:11px}
+    .scenario-summary{width:auto;margin-left:0;white-space:nowrap}
+    .scenario-toast{top:auto;bottom:18px;width:calc(100% - 28px);text-align:center}
+
+    .auth-nav{height:56px;padding:0 16px}.auth-nav .back-home{font-size:11.5px;padding:6px 9px}
+    .auth-wrap{width:calc(100% - 24px);margin:16px auto;border-radius:14px}
+    .auth-card{padding:30px 20px;min-height:0}.auth-card h2{font-size:21px}
+    .account-state-stage{min-height:calc(100dvh - 76px);padding:20px 12px}
+    .account-state-card{padding:26px 18px;border-radius:14px}
+    .account-state-card h1{font-size:20px}.account-state-actions .btn{flex:1;min-width:120px}
+
+    /* 상단바와 GNB를 모바일용 2단 가로 탭으로 전환 */
+    .admin-top{min-height:46px;padding:8px 10px;gap:8px;top:0}
+    .admin-top .brand{font-size:13px;white-space:nowrap}
+    .admin-top .right{margin-left:auto;gap:6px;min-width:0}
+    .admin-top .path,.admin-top .mystatus,.admin-top .right>span,.admin-top .ava{display:none!important}
+    .top-link{font-size:0;padding:5px 8px}.top-link::after{content:"⌂ 홈";font-size:11px}
+    .logout-btn{font-size:10.5px;white-space:nowrap}
+    .shell{display:block;min-height:0}
+    .side{height:48px;padding:5px 8px;display:flex;align-items:center;gap:5px;overflow-x:auto;overscroll-behavior-inline:contain;-webkit-overflow-scrolling:touch;position:sticky;top:46px;z-index:30;box-shadow:0 2px 5px rgba(16,24,40,.12)}
+    .side .grp{display:none}
+    .side a{flex:0 0 auto;min-width:max-content;padding:7px 11px;font-size:11.5px!important;justify-content:flex-start;white-space:nowrap}
+    .side a::first-letter{font-size:13px}.side a .ct{font-size:9px;margin-left:2px}
+    body.public-mode .side{display:none}
+
+    /* 목록이 기본. 카드 선택 후 상세만 표시되는 모바일 드릴다운 */
+    .inbox-shell{display:block;height:calc(100dvh - 94px);min-height:520px;background:#fff}
+    .inbox-list{height:100%;border-right:0}
+    .inbox-list .hd{padding:12px 12px 7px}.inbox-list h1{font-size:16px}
+    .kpis{margin-bottom:7px}.kpi{padding:6px 8px}.kpi b{font-size:14px}
+    .itabs{padding:0 8px;overflow-x:auto}.itabs button{flex:0 0 auto;padding:8px 9px;font-size:11.5px;white-space:nowrap}
+    .search{padding:8px 10px}.search input{font-size:12px}
+    .ccard{padding:11px 12px}.ccard .nm{font-size:12.5px}.ccard .prev{font-size:11.5px}
+    #page-inbox .conv{display:none}
+    #page-inbox.mobile-detail .inbox-list{display:none}
+    #page-inbox.mobile-detail .conv{display:grid;grid-template-columns:minmax(0,1fr);height:100%}
+    #page-inbox.mobile-detail .conv-main{height:100%;min-width:0;overflow:hidden}
+
+    .conv-hd{padding:9px 10px;gap:7px;flex-wrap:wrap;min-width:0}
+    .conv-hd .nm{font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(100vw - 216px)}
+    .conv-hd .right{order:2;width:100%;margin-left:0;gap:6px;overflow-x:auto;padding-top:2px}
+    .conv-hd .right .btn{flex:0 0 auto;padding:7px 10px;font-size:11px}
+    .mobile-back-btn,.mobile-info-btn{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font:700 11px var(--sans);padding:6px 8px;white-space:nowrap}
+    .mobile-back-btn{flex:0 0 auto}.mobile-info-btn{margin-left:auto;color:var(--brand);border-color:#9bb3e2}
+    .thread{padding:12px 10px 72px;gap:9px;min-height:0;overscroll-behavior:contain}
+    .msg{max-width:88%}.msg .bub{font-size:12.5px;padding:8px 10px;overflow-wrap:anywhere}.msg.sys{max-width:96%}
+    .doccard{max-width:100%;padding:7px 8px}.doccard .dn{font-size:11.5px}.doccard .dm{font-size:9.5px}
+    .composer{position:fixed;left:0;right:0;bottom:0;z-index:80;padding:8px 9px;gap:6px;padding-bottom:max(8px,env(safe-area-inset-bottom));box-shadow:0 -2px 10px rgba(16,24,40,.08)}
+    .composer input{min-width:0;width:0;padding:8px 11px;font-size:12px}.composer .att,.composer .send{flex:0 0 auto;width:32px;height:32px}
+
+    /* 학생 정보는 상세 화면 위에 올라오는 바텀시트 */
+    .vinfo{position:fixed;left:0;right:0;bottom:0;z-index:121;width:100%;max-height:min(82dvh,720px);padding:16px 16px max(20px,env(safe-area-inset-bottom));border:0;border-radius:18px 18px 0 0;box-shadow:0 -12px 40px rgba(16,24,40,.24);transform:translateY(105%);transition:transform .2s ease;pointer-events:none}
+    .conv.info-open .vinfo{transform:translateY(0);pointer-events:auto}
+    .mobile-sheet-close{display:flex;position:sticky;top:0;margin:-7px 0 9px auto;border:1px solid var(--line);background:#fff;border-radius:999px;width:30px;height:30px;align-items:center;justify-content:center;color:var(--ink2);font-size:15px;z-index:2}
+    .mobile-sheet-scrim{position:fixed;inset:0;z-index:120;border:0;background:rgba(16,24,40,.45)}
+    .conv.info-open .mobile-sheet-scrim{display:block}
+
+    /* 등록·멤버·통계·설정은 한 열, 표와 차트만 내부 가로 스크롤 */
+    .body2,body.public-mode .body2{width:100%;max-width:none;padding:16px 12px}
+    .body2 h1{font-size:18px}.body2 .sub{font-size:12px;margin-bottom:14px}
+    .panelbox{margin-bottom:12px}.panelbox .ph{padding:11px 12px;min-width:0;flex-wrap:wrap}.panelbox .pb{padding:14px 12px}
+    #page-register .body2>div:first-child,#page-stats .body2>div:first-child{flex-direction:column;align-items:stretch!important;margin-bottom:14px!important}
+    #page-register .body2>div:first-child>div:last-child,#page-stats .stat-filter{margin-left:0!important;width:100%}
+    #page-register .body2>div:first-child>div:last-child{justify-content:flex-end;overflow-x:auto}
+    .steps{overflow-x:auto;padding-bottom:3px}.step{flex:0 0 118px;font-size:11px;padding:7px 5px}
+    .reg-actions{margin:14px 0 24px;flex-wrap:wrap}.reg-actions>.btn,.reg-actions .left{flex:1}.reg-actions .left .btn{width:100%}
+    .waitcard{padding:20px 14px}.waitcard>div[style*="inline-flex"]{display:flex!important;flex-wrap:wrap;justify-content:center}
+    .invrow{flex-direction:column}.invrow input,.invrow select,.invrow button{width:100%}
+    .mrow{gap:8px;flex-wrap:wrap;padding:11px 4px}.mrow .mb{min-width:calc(100% - 58px)}.mrow .marrow{margin-left:auto}
+    .stat-filter{display:grid;grid-template-columns:1fr auto}.stat-filter select{min-width:0}
+    .stat-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.stat-card{padding:12px}.stat-card .sv{font-size:20px;overflow-wrap:anywhere}.stat-card .sl{font-size:10.5px}
+    .stats-cols{grid-template-columns:minmax(0,1fr);gap:12px}.stats-cols .panelbox .pb{overflow-x:auto}
+    .chart{min-width:500px;height:190px}.perf{min-width:560px}.hours{min-width:520px}
+    #page-settings .panelbox:nth-of-type(2) .pb{overflow-x:auto}
+    #page-settings .panelbox:first-of-type .pb>div[style*="justify-content:flex-end"]{flex-wrap:wrap}
+    .maprow{grid-template-columns:1fr;gap:5px}.maprow>span{text-align:center;transform:rotate(90deg)}
+    .togglerow{align-items:flex-start}.togglerow .lab{min-width:0}
+    .field input,.field select,textarea{max-width:100%}
+
+    .modal-overlay{align-items:flex-end;padding:0}
+    .modal-box{width:100%;max-width:none;max-height:88dvh;border-radius:17px 17px 0 0}
+    .modal-hd{padding:13px 15px}.modal-body{padding:6px 15px max(18px,env(safe-area-inset-bottom))}
+  }
+
+  @media(max-width:390px){
+    .scenario-control select{max-width:145px}
+    .stat-grid{grid-template-columns:1fr}
+    .mobile-info-btn{font-size:0}.mobile-info-btn::after{content:"정보";font-size:11px}
+    .conv-hd .nm{max-width:calc(100vw - 205px)}
+  }
 </style>
 </head>
 <body>
   <div class="wf-flag"><b>WIREFRAME</b> · 대학 포털 목업 (서정대학교 국제교류처) — UV-0 등록 신청 · UV-1 인박스 · UV-2 멤버 · UV-3 운영설정 · UV-4 통계</div>
+  <section class="scenario-bar" aria-label="목업 시나리오 전환기">
+    <strong>시나리오 전환</strong>
+    <label class="scenario-control">계정·등록 상태
+      <select id="accountScenario" onchange="applyAccountScenario()">
+        <option value="internal">박람회 내부발급 계정</option>
+        <option value="review">신규 등록 · 검토대기</option>
+        <option value="supplement">신규 등록 · 보완요청</option>
+        <option value="approved">신규 등록 · 승인</option>
+        <option value="rejected">신규 등록 · 반려/재신청</option>
+      </select>
+    </label>
+    <label class="scenario-control">로그인 역할
+      <select id="roleScenario" onchange="applyRoleScenario()">
+        <option value="owner">오너</option>
+        <option value="member">멤버</option>
+      </select>
+    </label>
+    <label class="scenario-control">상담 시작
+      <select id="claimScenario">
+        <option value="success">정상 배정</option>
+        <option value="conflict">동시 클릭 충돌</option>
+      </select>
+    </label>
+    <label class="scenario-control">종료 후 재문의
+      <select id="reopenScenario">
+        <option value="retain">기존 담당 유지</option>
+        <option value="unassigned">담당자 비활성 → 미배정</option>
+      </select>
+    </label>
+    <span class="scenario-summary" id="scenarioSummary">박람회 내부발급 계정 · 오너</span>
+  </section>
+  <div class="scenario-toast" id="scenarioToast" role="status" aria-live="polite" hidden></div>
 
   <!-- ===== 로그인 (기본 진입 화면) ===== -->
   <main class="auth-stage" id="loginView">
@@ -316,13 +470,13 @@
         <p>학생 문의 배정부터 서류 확인, 멤버 운영, 응대 통계까지 대학 국제교류처에 필요한 업무를 하나의 채널로 연결합니다.</p>
         <div class="auth-benefits">
           <div class="auth-benefit"><i>💬</i> 미배정·진행·종료 상담 통합 관리</div>
-          <div class="auth-benefit"><i>👥</i> 부서와 담당자별 자동 배정</div>
+          <div class="auth-benefit"><i>👥</i> 모든 멤버가 열람하고 담당자가 직접 상담 시작</div>
           <div class="auth-benefit"><i>📊</i> 응답 속도와 상담 현황 통계</div>
         </div>
       </div>
       <div class="auth-card">
         <h2>대학 담당자 로그인</h2>
-        <p class="lead">등록된 대학 계정으로 상담 포털에 접속하세요.</p>
+        <p class="lead" id="loginLead">운영팀에서 전달받은 대학 계정으로 접속하세요.</p>
         <form onsubmit="loginUniversity(event)">
           <div class="auth-field">
             <label for="univEmail">학교 이메일</label>
@@ -346,6 +500,25 @@
     </section>
   </main>
 
+  <!-- 승인 전 계정은 인박스 대신 상태 화면으로 이동 -->
+  <main class="account-state-stage" id="accountStateView" hidden>
+    <section class="account-state-card">
+      <div class="state-icon" id="accountStateIcon">⌛</div>
+      <h1 id="accountStateTitle">대학 등록 신청을 검토하고 있어요</h1>
+      <p id="accountStateDescription">승인 전에는 상담 인박스와 운영 메뉴를 이용할 수 없습니다.</p>
+      <div class="account-state-meta">
+        <span class="stchip st-wait" id="accountStateChip">검토 대기</span>
+        <span>신청 번호 <b>UNIV-2026-0714</b></span>
+        <span>예상 처리 1~3영업일</span>
+      </div>
+      <div class="account-state-actions">
+        <a class="btn" href="index.html" style="text-decoration:none">⌂ 랜딩페이지</a>
+        <button class="btn" type="button" onclick="showLoginFromState()">로그인 화면</button>
+        <button class="btn btn-primary" id="accountStateAction" type="button" hidden></button>
+      </div>
+    </section>
+  </main>
+
   <div class="admin-top" id="appTop" hidden>
     <span class="brand">UniChat 대학</span>
     <span class="path" id="pathTx">/univ/inbox</span>
@@ -356,8 +529,8 @@
           <option>온라인</option><option>자리비움</option><option>오프라인</option>
         </select>
       </div>
-      <span>서정대학교 국제교류처 · 김서윤 (유학생입학팀)</span>
-      <div class="ava">김서</div>
+      <span id="roleIdentity">서정대학교 국제교류처 · 박현우 (오너)</span>
+      <div class="ava" id="roleAvatar">박현</div>
       <button class="logout-btn" type="button" onclick="logoutUniversity()">로그아웃</button>
     </div>
   </div>
@@ -365,16 +538,11 @@
   <div class="shell" id="appShell" hidden>
     <div class="side">
       <div class="grp">상담</div>
-      <a class="on" data-pg="inbox" onclick="showPage('inbox', this)">💬 인박스 <span class="ct">3</span></a>
+      <a class="on" href="#" data-pg="inbox" onclick="showPage('inbox', this);return false">💬 인박스 <span class="ct">3</span></a>
       <div class="grp">채널 관리</div>
-      <a data-pg="members" onclick="showPage('members', this)">👥 멤버 관리</a>
-      <a data-pg="settings" onclick="showPage('settings', this)">⚙️ 운영 설정</a>
-      <a data-pg="stats" onclick="showPage('stats', this)">📊 통계</a>
-      <!--
-      <div class="grp">데모</div>
-      <a data-pg="register" onclick="showPage('register', this)">📝 등록 신청 (UV-0)</a>
-      */
-      -->
+      <a href="#" data-pg="members" data-owner-only onclick="showPage('members', this);return false">👥 멤버 관리</a>
+      <a href="#" data-pg="settings" onclick="showPage('settings', this);return false">⚙️ 운영 설정</a>
+      <a href="#" data-pg="stats" onclick="showPage('stats', this);return false">📊 통계</a>
     </div>
 
     <!-- ===== UV-1 인박스 ===== -->
@@ -390,56 +558,56 @@
             </div>
           </div>
           <div class="itabs">
-            <button class="on">미배정 큐<span class="n">3</span></button>
-            <button>내 대화<span class="n">4</span></button>
-            <button>전체</button>
-            <button>종료</button>
+            <button type="button" data-inbox-filter="queue">미배정<span class="n">3</span></button>
+            <button type="button" data-inbox-filter="mine">내 상담<span class="n">4</span></button>
+            <button class="on" type="button" data-inbox-filter="all">전체 상담</button>
+            <button type="button" data-inbox-filter="done">종료</button>
           </div>
-          <div class="search"><input placeholder="학생명 · 국가 · 메시지 내용 검색"></div>
+          <div class="search"><input id="inboxSearch" placeholder="학생명 · 국가 · 메시지 내용 검색"></div>
           <div class="clist">
 
-            <div class="ccard unassigned act" onclick="openConv(this,'queue','NAPAT SIRIPORN','🇹🇭')">
+            <div class="ccard unassigned" data-kind="queue" onclick="openConv(this,'queue','NAPAT SIRIPORN','🇹🇭')">
               <div class="av">🇹🇭</div>
               <div class="bd">
                 <div class="row1"><span class="nm">NAPAT SIRIPORN <small>태국 · 방콕</small></span><span class="tm">2분 전</span></div>
                 <div class="prev">สวัสดีค่ะ! 컴퓨터공학과 영문 모집요강이 궁금해요.</div>
-                <div class="tagrow2"><span class="tagchip tag-adm">입학</span><span class="stchip st-wait">대기</span><button class="claimbtn" onclick="event.stopPropagation();claim(this)">가져가기</button></div>
+                <div class="tagrow2"><span class="stchip st-wait">대기</span><button class="claimbtn" onclick="event.stopPropagation();claim(this)">상담 시작하기</button></div>
               </div>
             </div>
 
-            <div class="ccard unassigned" onclick="openConv(this,'queue','NGUYEN THI HOA','🇻🇳')">
+            <div class="ccard unassigned" data-kind="queue" onclick="openConv(this,'queue','NGUYEN THI HOA','🇻🇳')">
               <div class="av">🇻🇳</div>
               <div class="bd">
                 <div class="row1"><span class="nm">NGUYEN THI HOA <small>베트남 · 하노이</small></span><span class="tm">9분 전</span></div>
                 <div class="prev">Xin chào! 경영학과 장학금 신청 조건을 알고 싶어요.</div>
-                <div class="tagrow2"><span class="tagchip tag-sch">장학금</span><span class="stchip st-wait">대기</span><button class="claimbtn" onclick="event.stopPropagation();claim(this)">가져가기</button></div>
+                <div class="tagrow2"><span class="stchip st-wait">대기</span><button class="claimbtn" onclick="event.stopPropagation();claim(this)">상담 시작하기</button></div>
               </div>
             </div>
 
-            <div class="ccard unassigned" onclick="openConv(this,'queue','LI WEI','🇨🇳')">
+            <div class="ccard unassigned" data-kind="queue" onclick="openConv(this,'queue','LI WEI','🇨🇳')">
               <div class="av">🇨🇳</div>
               <div class="bd">
                 <div class="row1"><span class="nm">LI WEI <small>중국 · 칭다오</small></span><span class="tm">15분 전</span></div>
                 <div class="prev">您好！TOPIK 없이 기계공학과에 지원할 수 있나요?</div>
-                <div class="tagrow2"><span class="tagchip tag-adm">입학</span><span class="stchip st-wait">대기</span><button class="claimbtn" onclick="event.stopPropagation();claim(this)">가져가기</button></div>
+                <div class="tagrow2"><span class="stchip st-wait">대기</span><button class="claimbtn" onclick="event.stopPropagation();claim(this)">상담 시작하기</button></div>
               </div>
             </div>
 
-            <div class="ccard" onclick="openConv(this,'mine','DILNOZA KARIMOVA','🇺🇿')">
+            <div class="ccard act" data-kind="other" data-assignee="김서윤" onclick="openConv(this,'other','DILNOZA KARIMOVA','🇺🇿')">
               <div class="av">🇺🇿</div>
               <div class="bd">
                 <div class="row1"><span class="nm">DILNOZA KARIMOVA <small>우즈베키스탄 · 타슈켄트</small></span><span class="tm">40분 전</span></div>
                 <div class="prev">Salom! 한국학과와 어학연수 연계 과정을 문의드려요.</div>
-                <div class="tagrow2"><span class="tagchip tag-etc">어학연수</span><span class="stchip st-live">진행중</span></div>
+                <div class="tagrow2"><span class="stchip st-live">진행중</span></div>
               </div>
             </div>
 
-            <div class="ccard" onclick="openConv(this,'done','BOLOR ERDENE','🇲🇳')">
+            <div class="ccard" data-kind="done" data-assignee="최도윤" onclick="openConv(this,'done','BOLOR ERDENE','🇲🇳')">
               <div class="av">🇲🇳</div>
               <div class="bd">
                 <div class="row1"><span class="nm">BOLOR ERDENE <small>몽골 · 울란바토르</small></span><span class="tm">어제</span></div>
                 <div class="prev">Сайн байна уу! 기숙사 신청 서류 안내 감사합니다.</div>
-                <div class="tagrow2"><span class="tagchip tag-dorm">기숙사</span><span class="stchip st-done">종료</span></div>
+                <div class="tagrow2"><span class="stchip st-done">종료</span></div>
               </div>
             </div>
 
@@ -450,14 +618,16 @@
         <div class="conv">
           <div class="conv-main">
             <div class="conv-hd">
+              <button class="mobile-back-btn" type="button" onclick="showMobileInboxList()" aria-label="상담 목록으로 돌아가기">← 목록</button>
               <span class="flag" id="convFlag">🇹🇭</span>
               <span class="nm" id="convName">NAPAT SIRIPORN</span>
-              <span class="tagchip tag-adm" id="convTag">입학</span>
-              <span class="stchip st-wait" id="convSt">대기</span>
+              <span class="stchip st-wait" id="convSt" role="status" aria-live="polite">대기</span>
+              <button class="mobile-info-btn" id="mobileInfoButton" type="button" onclick="toggleStudentInfo()" aria-expanded="false" aria-controls="studentInfoPanel">학생 정보</button>
               <div class="right">
-                <button class="btn" onclick="transferMsg()">이관</button>
-                <button class="btn btn-primary" id="claimMainBtn" onclick="claimMain()">가져가기</button>
+                <button class="btn" id="transferBtn" style="display:none" onclick="transferMsg()">이관하기</button>
+                <button class="btn btn-primary" id="claimMainBtn" onclick="claimMain()">상담 시작하기</button>
                 <button class="btn btn-warn" id="endBtn" style="display:none" onclick="endConv()">종료 처리</button>
+                <button class="btn btn-primary" id="reopenBtn" style="display:none" onclick="reopenConversation()">학생 재문의 수신</button>
               </div>
             </div>
             <div class="thread" id="thread">
@@ -467,7 +637,7 @@
               <div class="msg"><div class="av" id="studentDocFlag">🇹🇭</div><div><div class="bub">📎 문서 보관함에서 전송
                 <div class="doccard"><span class="di">📄</span><div><div class="dn">성적증명서_2026.pdf</div><div class="dm">성적증명서 · v2 · 다운로드 시 로그 기록</div></div></div>
               </div><div class="meta">10:06</div></div></div>
-              <div class="msg sys"><div class="bub">🔔 미배정 대화입니다 — 담당자 배정이 필요해요</div></div>
+              <div class="msg sys"><div class="bub">🔔 대기 중인 상담입니다 — 내용은 열람할 수 있지만, 상담 시작 전까지 학생 메시지는 읽지 않음으로 유지됩니다.</div></div>
             </div>
             <div class="composer">
               <button class="att">📎</button>
@@ -476,7 +646,8 @@
             </div>
           </div>
 
-          <div class="vinfo">
+          <div class="vinfo" id="studentInfoPanel" aria-label="학생 정보와 상담 자료">
+            <button class="mobile-sheet-close" type="button" onclick="toggleStudentInfo(false)" aria-label="학생 정보 닫기">✕</button>
             <h4>학생 정보</h4>
             <div class="kv"><span>이름</span><b id="studentInfoName">NAPAT SIRIPORN</b></div>
             <div class="kv"><span>국적·도시·언어</span><b id="studentInfoCountry">🇹🇭 태국 · 방콕 · 태국어·영어</b></div>
@@ -498,25 +669,8 @@
                 <a class="fa" href="#" onclick="return false">다운로드</a>
               </div>
             </div>
-            <div class="reqdoc">
-              <select id="reqDocSel">
-                <option>졸업(예정)증명서</option><option>여권 사본</option><option>어학성적</option><option>성적증명서</option>
-              </select>
-              <button onclick="requestDoc()">📄 서류 요청</button>
-            </div>
-
-            <h4>배정 · 이관</h4>
-            <div class="assignbox">
-              <select id="teamSel" onchange="fillAssignees()">
-                <option value="">팀 선택</option>
-                <option value="유학생입학팀">유학생입학팀</option>
-                <option value="국제학생지원팀">국제학생지원팀</option>
-                <option value="생활관지원팀">생활관지원팀</option>
-              </select>
-              <select id="assigneeSel" disabled>
-                <option value="">먼저 팀을 선택하세요</option>
-              </select>
-            </div>
+            <h4>담당자</h4>
+            <div class="logmini" id="assigneeSummary">미배정 · 상담 시작 시 본인 담당으로 지정</div>
 
             <h4>과거 대화 이력</h4>
             <div class="logmini">2026-05-14 · 어학당 문의 (종료)</div>
@@ -524,10 +678,14 @@
             <h4>내부 메모 (비공개)</h4>
             <div class="notebox"><textarea placeholder="담당자만 볼 수 있는 메모">영문 모집요강 링크 전달 필요, TOPIK 4급 보유</textarea></div>
 
-            <h4>활동 로그</h4>
-            <button class="logbtn" onclick="openLogModal()">🕒 전체 활동 로그 보기 <span class="arrow">›</span></button>
+            <h4>자료 요청</h4>
+            <p class="sub" style="font-size:11px;margin:0 0 8px">상담 중 추가로 필요한 자료만 요청합니다.</p>
+            <div class="reqdoc">
+              <select id="reqDocSel2"><option>졸업(예정)증명서</option><option>어학성적</option><option>성적증명서</option><option>기타</option></select>
+              <button onclick="requestDoc('reqDocSel2')">📄 서류 요청</button>
+            </div>
 
-            <h4>첨부파일 · 링크 모아보기</h4>
+            <h4>첨부파일 · 링크</h4>
             <div class="filelist">
               <div class="fileitem">
                 <div class="fi">📄</div>
@@ -541,6 +699,7 @@
               </div>
             </div>
           </div>
+          <button class="mobile-sheet-scrim" type="button" onclick="toggleStudentInfo(false)" aria-label="학생 정보 닫기"></button>
         </div>
       </div>
 
@@ -549,7 +708,7 @@
           <div class="modal-hd"><b>활동 로그</b><button onclick="closeLogModal()">✕</button></div>
           <div class="modal-body">
             <div class="logmini" id="studentFileLog">10:06 NAPAT SIRIPORN 학생이 파일 첨부 (성적증명서_2026.pdf)</div>
-            <div class="logmini">10:02 대화 시작 · 미배정 큐 진입 · 태그=입학</div>
+            <div class="logmini">10:02 대화 시작 · 미배정 큐 진입</div>
             <div class="logmini">10:02 학생 프로필 자동 전달 (국적·고교·희망전공)</div>
             <div class="logmini">2026-06-20 (이전) TOPIK 성적표 수신</div>
             <div class="logmini">2026-05-14 (이전) 한국어과정 문의 종료 처리 · 담당 최도윤</div>
@@ -582,7 +741,7 @@
           <div class="panelbox"><div class="ph">1. 대학 정보</div><div class="pb">
             <div class="field"><label for="regNameKo">교명 (국문) <span class="req">*</span></label><input id="regNameKo" value="서정대학교" required></div>
             <div class="field"><label for="regNameEn">교명 (영문) <span class="req">*</span></label><input id="regNameEn" value="Seojeong University" required></div>
-            <div class="field"><label>학교 유형 · 지역 <span class="req">*</span></label><select><option>전문대학 · 경기 양주</option><option>4년제 사립 · 서울</option><option>4년제 국립 · 서울</option></select></div>
+            <div class="field"><label>학교 유형 · 지역 <span class="req">*</span></label><select><option>전문대학 · 경기 양주</option></select><span class="hint">MVP 등록 대상은 전문대학으로 한정합니다.</span></div>
             <div class="field"><label for="regWebsite">공식 웹사이트 <span class="req">*</span></label><input id="regWebsite" value="https://www.seojeong.ac.kr" required><span class="hint">대학 정보 확인에 사용됩니다.</span></div>
           </div></div>
           <div class="reg-actions"><span class="reg-help">표시된 항목은 필수입니다.</span><button class="btn btn-primary" type="button" onclick="goRegisterStep(2)">다음</button></div>
@@ -635,21 +794,20 @@
     <div class="page" id="page-members">
       <div class="body2">
         <h1>멤버 관리 <span class="ix">UV-2</span></h1>
-        <p class="sub">동료를 초대하고 담당 태그를 지정하세요. 태그 제한 멤버는 담당 태그 대화만 볼 수 있어요.</p>
-        <div class="panelbox"><div class="ph">멤버 초대</div><div class="pb">
+        <p class="sub">모든 멤버는 전체 상담 내역을 열람할 수 있습니다. 상담 시작·이관으로 담당자를 정합니다.</p>
+        <div class="panelbox"><div class="ph">멤버 초대 <span class="ownerbadge">오너 전용</span></div><div class="pb">
           <div class="invrow">
-            <input placeholder="동료 이메일 입력">
+            <input id="inviteEmail" type="email" placeholder="동료 이메일 입력" value="new.member@seojeong.ac.kr">
             <select><option>역할: 멤버</option><option>역할: 오너</option></select>
-            <select><option>담당: 입학</option><option>담당: 장학금</option><option>담당: 기숙사</option><option>담당: 전체</option></select>
-            <button>초대 링크 발송</button>
+            <button id="inviteButton" type="button" onclick="sendInvite(this)">초대 링크 발송</button>
           </div>
-          <p class="sub" style="margin:10px 0 0">초대 링크로 가입하면 서정대학교 국제교류처 멤버로 자동 연결됩니다</p>
+          <p class="sub" id="invitePolicyNote" style="margin:10px 0 0">현재 로그인 계정은 오너입니다. 초대 링크 발송·재발송·철회와 멤버 상태를 관리할 수 있습니다.</p>
         </div></div>
         <div class="panelbox"><div class="ph">멤버 4명 <small style="font-weight:500;color:var(--ink2);font-size:12px">· 이름을 클릭하면 상세를 볼 수 있어요</small></div><div class="pb">
-          <div class="mrow" onclick="openMember('kim')"><div class="mav">박현</div><div class="mb"><b>박현우</b><small>국제교류처장 · 전체 태그</small></div><span class="rolechip owner">오너</span><span class="stchip st-done">온라인</span><span class="marrow">›</span></div>
-          <div class="mrow" onclick="openMember('lee')"><div class="mav">김서</div><div class="mb"><b>김서윤 (나)</b><small>유학생입학팀 · 담당: 입학 · 진행중 2건</small></div><span class="rolechip">멤버</span><span class="stchip st-done">온라인</span><span class="marrow">›</span></div>
-          <div class="mrow" onclick="openMember('park')"><div class="mav">이민</div><div class="mb"><b>이민지</b><small>국제학생지원팀 · 담당: 장학금 · 진행중 1건</small></div><span class="rolechip">멤버</span><span class="stchip st-wait">자리비움</span><span class="marrow">›</span></div>
-          <div class="mrow" onclick="openMember('jung')"><div class="mav">최도</div><div class="mb"><b>최도윤</b><small>생활관지원팀 · 담당: 기숙사 · 진행중 0건</small></div><span class="rolechip">멤버</span><span class="tagchip tag-etc">오프라인</span><span class="marrow">›</span></div>
+          <div class="mrow" onclick="openMember('kim')"><div class="mav">박현</div><div class="mb"><b>박현우</b><small>상담 운영 · 진행중 0건</small></div><span class="rolechip owner">오너</span><span class="stchip st-done">온라인</span><span class="marrow">›</span></div>
+          <div class="mrow" onclick="openMember('lee')"><div class="mav">김서</div><div class="mb"><b>김서윤 (나)</b><small>상담 담당자 · 진행중 2건</small></div><span class="rolechip">멤버</span><span class="stchip st-done">온라인</span><span class="marrow">›</span></div>
+          <div class="mrow" onclick="openMember('park')"><div class="mav">이민</div><div class="mb"><b>이민지</b><small>상담 담당자 · 진행중 1건</small></div><span class="rolechip">멤버</span><span class="stchip st-wait">자리비움</span><span class="marrow">›</span></div>
+          <div class="mrow" onclick="openMember('jung')"><div class="mav">최도</div><div class="mb"><b>최도윤</b><small>상담 담당자 · 진행중 0건</small></div><span class="rolechip">멤버</span><span class="tagchip tag-etc">오프라인</span><span class="marrow">›</span></div>
         </div></div>
       </div>
     </div>
@@ -664,21 +822,9 @@
             <div><div class="mmn" id="mmFull">김서윤</div><div class="mmsub" id="mmEmail">admission@seojeong.ac.kr</div></div>
             <span class="stchip" id="mmStatus" style="margin-left:auto">온라인</span>
           </div>
-          <div class="kv"><span>담당 태그</span><b id="mmTag">입학</b></div>
           <div class="kv"><span>진행중 상담</span><b id="mmActive">2건</b></div>
           <div class="kv"><span>가입일</span><b id="mmJoined">2026-03-02</b></div>
-
-          <h4>소속 팀 <span class="ownerbadge">오너만 수정 가능</span></h4>
-          <div class="teamedit">
-            <select id="mmTeamSel">
-              <option value="유학생입학팀">유학생입학팀</option>
-              <option value="국제학생지원팀">국제학생지원팀</option>
-              <option value="생활관지원팀">생활관지원팀</option>
-            </select>
-            <button class="btn btn-primary" onclick="saveMemberTeam()">팀 변경 저장</button>
-          </div>
-          <p class="mmnote" id="mmSaveNote" style="display:none">✅ 저장되었어요 — 변경 이력이 활동 로그에 기록됩니다</p>
-          <p class="sub" style="font-size:11.5px;margin:10px 0 0">팀을 변경하면 태그→담당팀 라우팅에 따라 이후 배정 대상이 바뀝니다. 진행 중 대화는 유지돼요.</p>
+          <p class="sub" style="font-size:11.5px;margin:14px 0 0">모든 멤버는 전체 상담을 열람할 수 있습니다. 담당 상담은 인박스에서 상담 시작 또는 이관으로 변경합니다.</p>
         </div>
       </div>
     </div>
@@ -741,10 +887,10 @@
             <table class="perf">
               <thead><tr><th>담당자</th><th>배정</th><th>완료</th><th>평균 첫 응답</th><th>응답률</th></tr></thead>
               <tbody>
-                <tr><td><b>김서윤</b> · 유학생입학팀</td><td>31건</td><td>27건</td><td>4분 52초</td><td><span class="stchip st-done">97%</span></td></tr>
-                <tr><td><b>이민지</b> · 국제학생지원팀</td><td>24건</td><td>20건</td><td>6분 18초</td><td><span class="stchip st-done">94%</span></td></tr>
-                <tr><td><b>최도윤</b> · 생활관지원팀</td><td>19건</td><td>16건</td><td>7분 41초</td><td><span class="stchip st-live">91%</span></td></tr>
-                <tr><td><b>박현우</b> · 국제교류처장</td><td>12건</td><td>9건</td><td>9분 03초</td><td><span class="stchip st-wait">86%</span></td></tr>
+                <tr><td><b>김서윤</b></td><td>31건</td><td>27건</td><td>4분 52초</td><td><span class="stchip st-done">97%</span></td></tr>
+                <tr><td><b>이민지</b></td><td>24건</td><td>20건</td><td>6분 18초</td><td><span class="stchip st-done">94%</span></td></tr>
+                <tr><td><b>최도윤</b></td><td>19건</td><td>16건</td><td>7분 41초</td><td><span class="stchip st-live">91%</span></td></tr>
+                <tr><td><b>박현우</b></td><td>12건</td><td>9건</td><td>9분 03초</td><td><span class="stchip st-wait">86%</span></td></tr>
               </tbody>
             </table>
           </div>
@@ -756,33 +902,18 @@
     <div class="page" id="page-settings">
       <div class="body2">
         <h1>운영 설정 <span class="ix">UV-3</span></h1>
-        <p class="sub">채널 프로필 · 운영시간 · 배정(라우팅) 규칙을 관리합니다. (오너 전용)</p>
+        <p class="sub">학생 노출 대학 정보와 운영시간을 모든 활성 멤버가 함께 관리합니다.</p>
 
         <div class="panelbox">
-          <div class="ph">채널 프로필 — 학생 대학 상세에 노출</div>
+          <div class="ph">학생 노출 대학 정보 <span class="stchip st-done" style="margin-left:6px">게시 중</span></div>
           <div class="pb">
-            <div class="field"><label>환영 인사말 (한국어)</label><input value="안녕하세요, 서정대학교 국제교류처입니다! 유학생 입학과 학생생활을 안내해 드려요 😊"></div>
-            <div class="field"><label>환영 인사말 (English)</label><input value="Welcome to Seojeong University International Affairs Office! Ask us about admissions and student life."></div>
-            <div class="field"><label>모집 정보 링크</label><input value="https://www.seojeong.ac.kr"></div>
-          </div>
-        </div>
-
-        <div class="panelbox">
-          <div class="ph">배정(라우팅) 규칙</div>
-          <div class="pb">
-            <div class="togglerow">
-              <div class="lab"><b>자동 배정 (라운드로빈)</b><small>Off 시 담당자가 미배정 큐에서 수동으로 가져가야 합니다</small></div>
-              <div class="sw on" onclick="this.classList.toggle('on')"></div>
-            </div>
-            <div class="togglerow">
-              <div class="lab"><b>태그 → 담당팀 우선 라우팅</b><small>문의 유형 태그가 담당팀과 매칭되면 우선 배정</small></div>
-              <div class="sw on" onclick="this.classList.toggle('on')"></div>
-            </div>
-            <h4 style="font-size:12px;color:var(--ink2);margin:14px 0 6px">문의 유형 태그 ↔ 담당팀 매핑</h4>
-            <div class="maprow"><select><option>입학</option></select><span>→</span><select><option>유학생입학팀</option></select></div>
-            <div class="maprow"><select><option>장학금</option></select><span>→</span><select><option>국제학생지원팀</option></select></div>
-            <div class="maprow"><select><option>기숙사</option></select><span>→</span><select><option>생활관지원팀</option></select></div>
-            <div class="maprow"><select><option>기타</option></select><span>→</span><select><option>전체 (라운드로빈)</option></select></div>
+            <div class="field"><label>대학명</label><input value="서정대학교" readonly aria-readonly="true"><span class="hint">플랫폼이 인증한 공식 정보로, 대학에서 수정할 수 없습니다.</span></div>
+            <div class="field"><label>한 줄 소개</label><input value="외국인 유학생의 새로운 시작을 함께합니다."></div>
+            <div class="field"><label>배경 이미지</label><input value="campus-hero.jpg"><span class="hint">학생 대학 상세 상단에 노출됩니다.</span></div>
+            <div class="field"><label>학교 로고</label><input value="seojeong-logo.svg" readonly aria-readonly="true"><span class="hint">플랫폼이 인증한 공식 정보로, 변경은 관리자에게 요청합니다.</span></div>
+            <div class="field"><label>모집 브로셔</label><input value="2027-foreign-student-brochure.pdf"><span class="hint">학생은 PC·모바일에서 바로 볼 수 있습니다.</span></div>
+            <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px"><button class="btn" onclick="previewUniversityProfile()">미리보기</button><button class="btn btn-primary" onclick="publishUniversityProfile(this)">게시</button></div>
+            <p class="sub" id="publishStatus" style="font-size:11px;margin:10px 0 0">마지막 게시: 2026.07.16 10:30 · 학생에게 노출 중</p>
           </div>
         </div>
 
@@ -814,6 +945,176 @@
   let registrationStep=1;
   let registrationVerified=false;
   let proofUploaded=false;
+  let currentConversationKind='queue';
+  let scenarioToastTimer;
+  let inboxFilter='all';
+
+  const accountScenarios={
+    internal:{active:true,label:'박람회 내부발급 계정',lead:'운영팀에서 전달받은 대학 계정으로 접속하세요.'},
+    approved:{active:true,label:'신규 등록 · 승인',lead:'등록 승인이 완료되었습니다. 최초 오너 또는 초대받은 멤버 계정으로 접속하세요.'},
+    review:{active:false,label:'신규 등록 · 검토대기',icon:'⌛',title:'대학 등록 신청을 검토하고 있어요',description:'승인 전에는 상담 인박스와 운영 메뉴를 이용할 수 없습니다. 영업일 기준 1~3일 안에 이메일로 결과를 알려드려요.',chip:'검토 대기',chipClass:'st-wait'},
+    supplement:{active:false,label:'신규 등록 · 보완요청',icon:'!',title:'등록 신청 정보의 보완이 필요해요',description:'플랫폼 운영팀이 요청한 소속 증빙 서류를 보완해 주세요. 보완 제출 후 다시 검토 대기 상태로 전환됩니다.',chip:'보완 요청',chipClass:'st-live',action:'보완 내용 제출',step:3},
+    rejected:{active:false,label:'신규 등록 · 반려/재신청',icon:'×',title:'대학 등록 신청이 반려되었어요',description:'반려 사유: 공식 대학 정보와 신청자 재직 정보가 일치하지 않습니다. 내용을 수정한 뒤 다시 신청할 수 있습니다.',chip:'반려',chipClass:'st-wait',action:'수정 후 재신청',step:1}
+  };
+
+  function currentRole(){ return document.getElementById('roleScenario').value; }
+  function isOwner(){ return currentRole()==='owner'; }
+  function currentUserName(){ return isOwner() ? '박현우' : '김서윤'; }
+
+  function showScenarioToast(text){
+    const toast=document.getElementById('scenarioToast');
+    toast.textContent=text; toast.hidden=false;
+    clearTimeout(scenarioToastTimer);
+    scenarioToastTimer=setTimeout(()=>{ toast.hidden=true; },2200);
+  }
+
+  function isMobilePortal(){
+    return window.matchMedia('(max-width: 800px)').matches;
+  }
+
+  function toggleStudentInfo(force){
+    const conversation=document.querySelector('#page-inbox .conv');
+    const button=document.getElementById('mobileInfoButton');
+    const panel=document.getElementById('studentInfoPanel');
+    if(!conversation) return;
+    const wasOpen=conversation.classList.contains('info-open');
+    const shouldOpen=typeof force==='boolean' ? force : !conversation.classList.contains('info-open');
+    const isOpen=shouldOpen && isMobilePortal();
+    conversation.classList.toggle('info-open',isOpen);
+    document.body.classList.toggle('student-sheet-open',isOpen);
+    if(button) button.setAttribute('aria-expanded',String(isOpen));
+    if(panel){
+      if(isMobilePortal()){
+        panel.setAttribute('role','dialog');
+        panel.setAttribute('aria-modal','true');
+        panel.setAttribute('aria-hidden',String(!isOpen));
+        panel.toggleAttribute('inert',!isOpen);
+      }else{
+        panel.removeAttribute('role');
+        panel.removeAttribute('aria-modal');
+        panel.removeAttribute('aria-hidden');
+        panel.removeAttribute('inert');
+      }
+      if(isOpen) requestAnimationFrame(()=>panel.querySelector('.mobile-sheet-close')?.focus());
+    }
+    if(wasOpen && !isOpen && button && isMobilePortal()) button.focus();
+  }
+
+  function showMobileConversation(){
+    if(!isMobilePortal()) return;
+    const page=document.getElementById('page-inbox');
+    page.classList.add('mobile-detail');
+    toggleStudentInfo(false);
+    const thread=document.getElementById('thread');
+    requestAnimationFrame(()=>{ thread.scrollTop=thread.scrollHeight; });
+  }
+
+  function showMobileInboxList(){
+    const page=document.getElementById('page-inbox');
+    if(page) page.classList.remove('mobile-detail');
+    toggleStudentInfo(false);
+  }
+
+  window.addEventListener('resize',()=>{
+    if(!isMobilePortal()){
+      const page=document.getElementById('page-inbox');
+      if(page) page.classList.remove('mobile-detail');
+      toggleStudentInfo(false);
+    }
+  });
+
+  document.addEventListener('keydown',event=>{
+    if(event.key==='Escape' && document.querySelector('#page-inbox .conv.info-open')) toggleStudentInfo(false);
+  });
+
+  function updateScenarioSummary(){
+    const account=accountScenarios[document.getElementById('accountScenario').value];
+    const role=isOwner() ? '오너' : '멤버';
+    document.getElementById('scenarioSummary').textContent=`${account.label} · ${role}`;
+    document.getElementById('loginLead').textContent=account.lead || '승인 전 계정은 로그인해도 상담 인박스에 접근할 수 없습니다.';
+  }
+
+  function hidePortalViews(){
+    document.getElementById('loginView').hidden=true;
+    document.getElementById('accountStateView').hidden=true;
+    document.getElementById('appTop').hidden=true;
+    document.getElementById('appShell').hidden=true;
+    document.body.classList.remove('public-mode');
+  }
+
+  function applyAccountScenario(){
+    const value=document.getElementById('accountScenario').value;
+    const scenario=accountScenarios[value];
+    updateScenarioSummary();
+    hidePortalViews();
+    if(scenario.active) document.getElementById('loginView').hidden=false;
+    else showAccountState(value);
+  }
+
+  function showAccountState(value=document.getElementById('accountScenario').value){
+    const scenario=accountScenarios[value];
+    hidePortalViews();
+    const view=document.getElementById('accountStateView');
+    document.getElementById('accountStateIcon').textContent=scenario.icon || '⌛';
+    document.getElementById('accountStateTitle').textContent=scenario.title || '대학 등록 상태를 확인해 주세요';
+    document.getElementById('accountStateDescription').textContent=scenario.description || '승인 전에는 상담 인박스에 접근할 수 없습니다.';
+    const chip=document.getElementById('accountStateChip');
+    chip.textContent=scenario.chip || '확인 필요';
+    chip.className=`stchip ${scenario.chipClass || 'st-wait'}`;
+    const action=document.getElementById('accountStateAction');
+    if(scenario.action){
+      action.hidden=false; action.textContent=scenario.action;
+      action.onclick=()=>openCorrectionRegistration(scenario.step);
+    }else{
+      action.hidden=true; action.onclick=null;
+    }
+    view.hidden=false;
+  }
+
+  function showLoginFromState(){
+    hidePortalViews();
+    document.getElementById('loginView').hidden=false;
+  }
+
+  function openCorrectionRegistration(step){
+    openPublicRegister();
+    goRegisterStep(step,true);
+  }
+
+  function applyRoleScenario(){
+    const owner=isOwner();
+    let returnedFromOwnerPage=false;
+    document.getElementById('roleIdentity').textContent=owner ? '서정대학교 국제교류처 · 박현우 (오너)' : '서정대학교 국제교류처 · 김서윤 (상담 담당자)';
+    document.getElementById('roleAvatar').textContent=owner ? '박현' : '김서';
+    document.getElementById('univEmail').value=owner ? 'international@seojeong.ac.kr' : 'admission@seojeong.ac.kr';
+    document.querySelectorAll('[data-owner-only]').forEach(el=>{ el.hidden=!owner; });
+    const inviteButton=document.getElementById('inviteButton');
+    if(inviteButton){
+      inviteButton.disabled=!owner;
+      inviteButton.title=owner ? '' : '오너만 초대 링크를 발송할 수 있습니다';
+    }
+    const inviteNote=document.getElementById('invitePolicyNote');
+    if(inviteNote) inviteNote.textContent=owner
+      ? '현재 로그인 계정은 오너입니다. 초대 링크 발송·재발송·철회와 멤버 상태를 관리할 수 있습니다.'
+      : '현재 로그인 계정은 멤버입니다. 운영 설정·상담 통계·전체 상담 이력에 접근할 수 있으며, 멤버 관리와 초대 링크 발송은 오너만 할 수 있습니다.';
+    updateScenarioSummary();
+
+    const currentPage=document.querySelector('.page.show');
+    if(!owner && currentPage && currentPage.id==='page-members'){
+      showScenarioToast('멤버는 오너 전용 화면에 접근할 수 없습니다.');
+      const inboxLink=document.querySelector('.side a[data-pg="inbox"]');
+      showPage('inbox',inboxLink);
+      returnedFromOwnerPage=true;
+    }
+    applyInboxFilter();
+    const active=document.querySelector('.ccard.act');
+    if(active && !document.getElementById('appShell').hidden){
+      const name=active.querySelector('.nm').childNodes[0].textContent.trim();
+      const flag=active.querySelector('.av').textContent.trim();
+      openConv(active,active.dataset.kind || 'queue',name,flag);
+      if(returnedFromOwnerPage && isMobilePortal()) showMobileInboxList();
+    }
+  }
 
   function loginUniversity(event){
     event.preventDefault();
@@ -826,10 +1127,17 @@
       return;
     }
     msg.style.display='none';
+    const account=document.getElementById('accountScenario').value;
+    if(!accountScenarios[account].active){
+      showAccountState(account);
+      return;
+    }
     document.body.classList.remove('public-mode');
     document.getElementById('loginView').hidden=true;
+    document.getElementById('accountStateView').hidden=true;
     document.getElementById('appTop').hidden=false;
     document.getElementById('appShell').hidden=false;
+    applyRoleScenario();
     const inboxLink=document.querySelector('.side a[data-pg="inbox"]');
     showPage('inbox',inboxLink);
   }
@@ -837,6 +1145,7 @@
   function logoutUniversity(){
     document.getElementById('appTop').hidden=true;
     document.getElementById('appShell').hidden=true;
+    document.getElementById('accountStateView').hidden=true;
     document.getElementById('loginView').hidden=false;
     document.body.classList.remove('public-mode');
     document.getElementById('pathTx').textContent='/univ/inbox';
@@ -850,6 +1159,7 @@
 
   function openPublicRegister(){
     document.getElementById('loginView').hidden=true;
+    document.getElementById('accountStateView').hidden=true;
     document.getElementById('appTop').hidden=false;
     document.getElementById('appShell').hidden=false;
     document.body.classList.add('public-mode');
@@ -862,6 +1172,7 @@
       document.getElementById('appTop').hidden=true;
       document.getElementById('appShell').hidden=true;
       document.getElementById('loginView').hidden=false;
+      document.getElementById('accountStateView').hidden=true;
       document.body.classList.remove('public-mode');
     }else{
       const inboxLink=document.querySelector('.side a[data-pg="inbox"]');
@@ -945,15 +1256,27 @@
     }
     msg.style.display='none';
     document.getElementById('registrationEmail').textContent=document.getElementById('regEmail').value;
+    const accountSelect=document.getElementById('accountScenario');
+    if(accountSelect.value==='supplement' || accountSelect.value==='rejected'){
+      accountSelect.value='review';
+      updateScenarioSummary();
+    }
     goRegisterStep(4,true);
   }
 
   function showPage(key, el){
+    if(key==='members' && !isOwner()){
+      showScenarioToast('오너만 멤버 관리에 접근할 수 있습니다.');
+      key='inbox';
+      el=document.querySelector('.side a[data-pg="inbox"]');
+    }
     document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));
     document.getElementById('page-'+key).classList.add('show');
     document.querySelectorAll('.side a').forEach(a=>a.classList.remove('on'));
     if(el) el.classList.add('on');
     if(key==='register' && !document.body.classList.contains('public-mode')) resetRegistration();
+    if(key==='inbox') showMobileInboxList();
+    else toggleStudentInfo(false);
     const paths={inbox:'/univ/inbox', settings:'/univ/settings', members:'/univ/members', stats:'/univ/statistics', register:'/univ/register'};
     document.getElementById('pathTx').textContent = paths[key] || '/univ';
   }
@@ -977,47 +1300,123 @@
     button.textContent='✅ 내보내기 준비 완료';
     setTimeout(()=>button.textContent='내보내기',1600);
   }
+  function previewUniversityProfile(){
+    let modal=document.getElementById('profilePreviewModal');
+    if(!modal){
+      modal=document.createElement('div'); modal.className='modal-overlay'; modal.id='profilePreviewModal';
+      modal.innerHTML='<div class="modal-box"><div class="modal-hd"><b>학생 화면 미리보기</b><button onclick="document.getElementById(\'profilePreviewModal\').classList.remove(\'show\')">✕</button></div><div class="modal-body" id="profilePreviewBody"></div></div>';
+      document.body.appendChild(modal);
+    }
+    const fields=document.querySelectorAll('#page-settings .field input');
+    const [name,intro,background,logo,brochure]=[...fields].map(input=>input.value);
+    document.getElementById('profilePreviewBody').innerHTML=`<div style="height:130px;border-radius:10px;background:linear-gradient(135deg,#b9c8d8,#e8edf3);display:grid;place-items:center;color:#52606d;font-size:11px">${background}</div><div style="display:flex;gap:10px;align-items:center;margin-top:-20px;padding:0 12px"><div style="width:46px;height:46px;background:#fff;border:1px solid var(--line);border-radius:12px;display:grid;place-items:center;font-size:10px">${logo}</div><div><b>${name}</b><small style="display:block;color:var(--ink2)">✓ 인증 대학</small></div></div><p>${intro}</p><div class="fileitem"><div class="fi">▤</div><div class="fb"><div class="fn">${brochure}</div><div class="fm">PDF · 바로 보기</div></div></div><button class="btn btn-primary" style="width:100%;margin-top:12px">상담하기</button>`;
+    modal.classList.add('show');
+  }
+  function publishUniversityProfile(button){
+    document.getElementById('publishStatus').textContent='마지막 게시: 방금 전 · 학생에게 노출 중';
+    button.textContent='✓ 게시 완료'; setTimeout(()=>button.textContent='게시',1500);
+  }
 
-  document.querySelectorAll('.itabs button').forEach(b=>{
-    b.addEventListener('click', ()=>{
-      document.querySelectorAll('.itabs button').forEach(x=>x.classList.remove('on'));
-      b.classList.add('on');
+  function getInboxCardState(card){
+    const kind=card.dataset.kind || 'queue';
+    if(kind==='queue' || kind==='done') return kind;
+    return card.dataset.assignee===currentUserName() ? 'mine' : 'other';
+  }
+  function cardIdentity(card){
+    return {
+      name:card.querySelector('.nm').childNodes[0].textContent.trim(),
+      flag:card.querySelector('.av').textContent.trim()
+    };
+  }
+  function applyInboxFilter(){
+    const query=(document.getElementById('inboxSearch')?.value || '').trim().toLowerCase();
+    const cards=[...document.querySelectorAll('.ccard')];
+    cards.forEach(card=>{
+      const state=getInboxCardState(card);
+      const matchesState=inboxFilter==='all' || state===inboxFilter;
+      const matchesQuery=!query || card.textContent.toLowerCase().includes(query);
+      card.hidden=!(matchesState && matchesQuery);
     });
+    const queueCount=cards.filter(card=>getInboxCardState(card)==='queue').length;
+    const mineCount=cards.filter(card=>getInboxCardState(card)==='mine').length;
+    const queueBadge=document.querySelector('[data-inbox-filter="queue"] .n');
+    const mineBadge=document.querySelector('[data-inbox-filter="mine"] .n');
+    if(queueBadge) queueBadge.textContent=queueCount;
+    if(mineBadge) mineBadge.textContent=mineCount;
+    const active=document.querySelector('.ccard.act');
+    if(active?.hidden){
+      active.classList.remove('act');
+      const next=cards.find(card=>!card.hidden);
+      if(next && !isMobilePortal()){
+        const {name,flag}=cardIdentity(next);
+        openConv(next,next.dataset.kind || 'queue',name,flag);
+      }
+    }
+  }
+  function setInboxFilter(filter,button){
+    inboxFilter=filter;
+    document.querySelectorAll('[data-inbox-filter]').forEach(tab=>tab.classList.toggle('on',tab===button));
+    applyInboxFilter();
+  }
+  document.querySelectorAll('[data-inbox-filter]').forEach(button=>{
+    button.addEventListener('click',()=>setInboxFilter(button.dataset.inboxFilter,button));
   });
+  document.getElementById('inboxSearch').addEventListener('input',applyInboxFilter);
+  document.querySelectorAll('.ccard .tagchip').forEach(tag=>tag.remove());
+  document.querySelectorAll('.claimbtn').forEach(button=>button.textContent='상담 시작하기');
 
   const studentProfiles={
     'NAPAT SIRIPORN':{
-      flag:'🇹🇭',country:'태국',city:'방콕',school:'트리암 우돔 숙사 고등학교',language:'태국어·영어',major:'컴퓨터공학',intake:'2027.03',email:'napat.siriporn@example.com',tag:'입학',tagCls:'tag-adm',
+      flag:'🇹🇭',country:'태국',city:'방콕',school:'트리암 우돔 숙사 고등학교',language:'태국어·영어',major:'컴퓨터공학',intake:'2027.03',email:'napat.siriporn@example.com',
       greeting:'สวัสดีค่ะ! 컴퓨터공학과 지원 조건과 영문 모집요강이 궁금해요. Do you have English materials?'
     },
     'NGUYEN THI HOA':{
-      flag:'🇻🇳',country:'베트남',city:'하노이',school:'추반안 고등학교',language:'베트남어·영어',major:'경영학',intake:'2027.09',email:'hoa.nguyen@example.vn',tag:'장학금',tagCls:'tag-sch',
+      flag:'🇻🇳',country:'베트남',city:'하노이',school:'추반안 고등학교',language:'베트남어·영어',major:'경영학',intake:'2027.09',email:'hoa.nguyen@example.vn',
       greeting:'Xin chào! 경영학과 입학 장학금과 기숙사 신청 조건을 알고 싶어요.'
     },
     'LI WEI':{
-      flag:'🇨🇳',country:'중국',city:'칭다오',school:'칭다오 제2고등학교',language:'중국어·영어',major:'기계공학',intake:'2027.03',email:'li.wei@example.cn',tag:'입학',tagCls:'tag-adm',
+      flag:'🇨🇳',country:'중국',city:'칭다오',school:'칭다오 제2고등학교',language:'중국어·영어',major:'기계공학',intake:'2027.03',email:'li.wei@example.cn',
       greeting:'您好！TOPIK 성적 없이 기계공학과에 지원할 수 있는 전형이 있나요?'
     },
     'DILNOZA KARIMOVA':{
-      flag:'🇺🇿',country:'우즈베키스탄',city:'타슈켄트',school:'타슈켄트 국립경제대학교 부속 리체이',language:'우즈베크어·러시아어',major:'한국학',intake:'2027.09',email:'dilnoza.karimova@example.uz',tag:'어학연수',tagCls:'tag-etc',
+      flag:'🇺🇿',country:'우즈베키스탄',city:'타슈켄트',school:'타슈켄트 국립경제대학교 부속 리체이',language:'우즈베크어·러시아어',major:'한국학',intake:'2027.09',email:'dilnoza.karimova@example.uz',
       greeting:'Salom! 한국학과와 한국어 어학연수를 연계해서 신청할 수 있는지 문의드려요.'
     },
     'BOLOR ERDENE':{
-      flag:'🇲🇳',country:'몽골',city:'울란바토르',school:'몽골‑러시아 제3학교',language:'몽골어·러시아어',major:'국제학',intake:'2027.03',email:'bolor.erdene@example.mn',tag:'기숙사',tagCls:'tag-dorm',
+      flag:'🇲🇳',country:'몽골',city:'울란바토르',school:'몽골‑러시아 제3학교',language:'몽골어·러시아어',major:'국제학',intake:'2027.03',email:'bolor.erdene@example.mn',
       greeting:'Сайн байна уу! 국제학부 입학과 기숙사 신청에 필요한 서류를 확인하고 싶어요.'
     }
   };
 
+  function bindCardState(card,kind,name,flag){
+    card.dataset.kind=kind;
+    card.onclick=()=>openConv(card,kind,name,flag);
+  }
+
+  function ensureClaimButton(card){
+    const row=card.querySelector('.tagrow2');
+    if(row && !row.querySelector('.claimbtn')){
+      const button=document.createElement('button');
+      button.className='claimbtn'; button.textContent='상담 시작하기';
+      button.onclick=function(event){ event.stopPropagation(); claim(this); };
+      row.appendChild(button);
+    }
+  }
+
   function openConv(el, kind, name, flag){
+    if(!el) return;
+    if(kind==='mine' || kind==='other'){
+      const assignee=el.dataset.assignee || currentUserName();
+      kind=assignee===currentUserName() ? 'mine' : 'other';
+    }
+    currentConversationKind=kind;
+    el.dataset.kind=kind;
     document.querySelectorAll('.ccard').forEach(c=>c.classList.remove('act'));
     el.classList.add('act');
     document.getElementById('convName').textContent = name;
     document.getElementById('convFlag').textContent = flag;
     const profile=studentProfiles[name];
     if(profile){
-      const tag=document.getElementById('convTag');
-      tag.textContent=profile.tag;
-      tag.className=`tagchip ${profile.tagCls}`;
       document.getElementById('studentInfoName').textContent=name;
       document.getElementById('studentInfoCountry').textContent=`${profile.flag} ${profile.country} · ${profile.city} · ${profile.language}`;
       document.getElementById('studentInfoSchool').textContent=profile.school;
@@ -1031,59 +1430,139 @@
     }
     const st = document.getElementById('convSt');
     const claimBtn = document.getElementById('claimMainBtn');
+    const transferBtn = document.getElementById('transferBtn');
     const endBtn = document.getElementById('endBtn');
+    const reopenBtn = document.getElementById('reopenBtn');
+    const assigneeSummary = document.getElementById('assigneeSummary');
     const input = document.getElementById('adminInput');
+    claimBtn.style.display='none'; transferBtn.style.display='none'; endBtn.style.display='none'; reopenBtn.style.display='none';
     if(kind==='queue'){
       st.className='stchip st-wait'; st.textContent='대기';
-      claimBtn.style.display='inline-block'; endBtn.style.display='none';
+      claimBtn.style.display='inline-block';
       input.disabled=true; input.placeholder='메시지를 입력하세요 (배정 후 전송 가능)';
+      assigneeSummary.textContent='미배정 · 상담 시작 시 본인 담당으로 지정';
     } else if(kind==='mine'){
       st.className='stchip st-live'; st.textContent='진행중';
-      claimBtn.style.display='none'; endBtn.style.display='inline-block';
+      transferBtn.style.display='inline-block'; endBtn.style.display='inline-block';
       input.disabled=false; input.placeholder='메시지를 입력하세요';
+      assigneeSummary.textContent=`${el.dataset.assignee || currentUserName()} (나) · 진행 중`;
+    } else if(kind==='other'){
+      st.className='stchip st-live'; st.textContent='진행중';
+      if(isOwner()) transferBtn.style.display='inline-block';
+      input.disabled=true; input.placeholder=`${el.dataset.assignee || '다른 담당자'}님이 상담 중입니다`;
+      assigneeSummary.textContent=`${el.dataset.assignee || '다른 담당자'} · 진행 중`;
     } else {
       st.className='stchip st-done'; st.textContent='종료';
-      claimBtn.style.display='none'; endBtn.style.display='none';
+      reopenBtn.style.display='inline-block';
       input.disabled=true; input.placeholder='종료된 대화입니다';
+      assigneeSummary.textContent=`${el.dataset.assignee || '담당자 미상'} · 종료 시점 담당`;
     }
+    showMobileConversation();
   }
 
   function claim(btn){
     const card = btn.closest('.ccard');
+    beginCounseling(card);
+  }
+  function claimMain(){
+    beginCounseling(document.querySelector('.ccard.act'));
+  }
+  function beginCounseling(card){
+    if(!card || (card.dataset.kind || 'queue')!=='queue'){
+      showScenarioToast('이미 다른 상태로 변경된 상담입니다. 최신 상태를 확인해 주세요.');
+      return;
+    }
+    const nm = card.querySelector('.nm').childNodes[0].textContent.trim();
+    const flag = card.querySelector('.av').textContent.trim();
     card.classList.remove('unassigned');
     card.querySelector('.stchip').className='stchip st-live';
     card.querySelector('.stchip').textContent='진행중';
-    btn.remove();
-    const nm = card.querySelector('.nm').childNodes[0].textContent.trim();
-    const flag = card.querySelector('.av').textContent.trim();
-    openConv(card, 'mine', nm, flag);
-  }
-  function claimMain(){
-    const active = document.querySelector('.ccard.act');
-    if(active){
-      active.classList.remove('unassigned');
-      active.querySelector('.stchip').className='stchip st-live';
-      active.querySelector('.stchip').textContent='진행중';
-      const cb = active.querySelector('.claimbtn'); if(cb) cb.remove();
-      const nm = active.querySelector('.nm').childNodes[0].textContent.trim();
-      const flag = active.querySelector('.av').textContent.trim();
-      openConv(active, 'mine', nm, flag);
+    const cb=card.querySelector('.claimbtn'); if(cb) cb.remove();
+    if(document.getElementById('claimScenario').value==='conflict'){
+      card.dataset.assignee='이민지';
+      bindCardState(card,'other',nm,flag);
+      openConv(card,'other',nm,flag);
+      setInboxFilter('all',document.querySelector('[data-inbox-filter="all"]'));
+      addSys('⚠️ 다른 멤버 이민지가 먼저 상담을 시작했습니다 · 최신 담당자와 진행 상태를 불러왔습니다');
+      return;
     }
-    addSys('✅ 김서윤(유학생입학팀)이 대화를 배정받았습니다');
+    card.dataset.assignee=currentUserName();
+    bindCardState(card,'mine',nm,flag);
+    openConv(card,'mine',nm,flag);
+    setInboxFilter('mine',document.querySelector('[data-inbox-filter="mine"]'));
+    addSys(`✅ ${currentUserName()}이 상담을 시작했습니다 · 대기 중 누적 학생 메시지는 읽음 처리되었습니다`);
   }
   function endConv(){
     const active = document.querySelector('.ccard.act');
-    if(active){ active.querySelector('.stchip').className='stchip st-done'; active.querySelector('.stchip').textContent='종료'; }
+    if(!active || currentConversationKind!=='mine'){
+      showScenarioToast('현재 담당자만 진행 중 상담을 종료할 수 있습니다.');
+      return;
+    }
+    active.querySelector('.stchip').className='stchip st-done'; active.querySelector('.stchip').textContent='종료';
     const nm = active ? active.querySelector('.nm').childNodes[0].textContent.trim() : '';
     const flag = active ? active.querySelector('.av').textContent.trim() : '';
+    bindCardState(active,'done',nm,flag);
     openConv(active, 'done', nm, flag);
-    addSys('🔒 담당자가 대화를 종료했습니다 · 학생이 다시 메시지를 보내면 자동 재오픈');
+    setInboxFilter('done',document.querySelector('[data-inbox-filter="done"]'));
+    addSys('🔒 담당자가 대화를 종료했습니다 · 학생이 다시 상담하기를 누르면 같은 채널의 새 상담 회차가 열립니다');
+  }
+  function reopenConversation(){
+    const active=document.querySelector('.ccard.act');
+    if(!active || currentConversationKind!=='done') return;
+    const nm=active.querySelector('.nm').childNodes[0].textContent.trim();
+    const flag=active.querySelector('.av').textContent.trim();
+    const mode=document.getElementById('reopenScenario').value;
+    if(mode==='retain'){
+      const assignee=active.dataset.assignee || '최도윤';
+      active.classList.remove('unassigned');
+      active.querySelector('.stchip').className='stchip st-live'; active.querySelector('.stchip').textContent='진행중';
+      const kind=assignee===currentUserName() ? 'mine' : 'other';
+      bindCardState(active,kind,nm,flag);
+      openConv(active,kind,nm,flag);
+      setInboxFilter('all',document.querySelector('[data-inbox-filter="all"]'));
+      addSys(`↩ 학생이 다시 상담하기를 눌렀습니다 · 새 상담 회차가 열리고 기존 활성 담당자 ${assignee}에게 유지 배정되었습니다`);
+    }else{
+      delete active.dataset.assignee;
+      active.classList.add('unassigned');
+      active.querySelector('.stchip').className='stchip st-wait'; active.querySelector('.stchip').textContent='대기';
+      ensureClaimButton(active);
+      bindCardState(active,'queue',nm,flag);
+      openConv(active,'queue',nm,flag);
+      setInboxFilter('queue',document.querySelector('[data-inbox-filter="queue"]'));
+      addSys('↩ 학생이 다시 상담하기를 눌렀습니다 · 기존 담당자가 비활성 상태여서 새 상담 회차가 미배정 큐에 들어왔습니다');
+    }
   }
   function transferMsg(){
-    addSys('↪ 최도윤(생활관지원팀)에게 이관되었습니다 · 태그: 입학 → 기숙사 · 학생 채널은 유지');
+    if(currentConversationKind!=='mine' && !(currentConversationKind==='other' && isOwner())){
+      showScenarioToast('이관은 진행 중 상담의 현재 담당자 또는 오너만 할 수 있습니다.');
+      return;
+    }
+    let modal=document.getElementById('transferModal');
+    if(!modal){
+      modal=document.createElement('div'); modal.className='modal-overlay'; modal.id='transferModal';
+      modal.innerHTML='<div class="modal-box"><div class="modal-hd"><b>상담 이관</b><button onclick="closeTransferModal()">✕</button></div><div class="modal-body"><p class="sub">학생 채널과 내부 메모는 유지한 채 담당자만 변경합니다.</p><div class="field"><label>담당자 선택</label><select id="transferAssignee"><option value="">담당자 선택</option><option>김서윤</option><option>이민지</option><option>최도윤</option><option>박현우</option></select></div><div class="field"><label>이관 메모 (선택)</label><textarea id="transferNote" placeholder="다음 담당자에게 전달할 내용을 남겨주세요"></textarea></div><button class="btn btn-primary" onclick="confirmTransfer()">이관하기</button></div></div>';
+      document.body.appendChild(modal);
+    }
+    modal.classList.add('show');
   }
-  function requestDoc(){
-    const cat = document.getElementById('reqDocSel').value;
+  function closeTransferModal(){ document.getElementById('transferModal').classList.remove('show'); }
+  function confirmTransfer(){
+    const assignee=document.getElementById('transferAssignee').value;
+    if(!assignee) return;
+    const active=document.querySelector('.ccard.act');
+    if(!active) return;
+    const nm=active.querySelector('.nm').childNodes[0].textContent.trim();
+    const flag=active.querySelector('.av').textContent.trim();
+    active.dataset.assignee=assignee;
+    const kind=assignee===currentUserName() ? 'mine' : 'other';
+    bindCardState(active,kind,nm,flag);
+    closeTransferModal();
+    openConv(active,kind,nm,flag);
+    setInboxFilter('all',document.querySelector('[data-inbox-filter="all"]'));
+    addSys(`↪ ${assignee}에게 이관되었습니다 · 학생 채널과 내부 메모는 유지됩니다`);
+  }
+  function requestDoc(selectId='reqDocSel2'){
+    const cat = document.getElementById(selectId).value;
     addMe(`📄 [서류 요청] <b>${cat}</b>를 보내주세요.<br><small style="opacity:.8">학생은 문서 보관함에서 바로 전송할 수 있어요</small>`);
   }
   function addSys(text){
@@ -1116,28 +1595,27 @@
     dot.style.background = v==='온라인' ? '#5fe3a1' : v==='자리비움' ? '#f5b400' : '#aeb6c4';
   }
 
-  // 팀 → 담당자 (팀 선택 시 해당 팀 소속 담당자만 노출)
-  const teamMembers={
-    '유학생입학팀':['김서윤 (나)','박현우 (오너·전체)'],
-    '국제학생지원팀':['이민지','박현우 (오너·전체)'],
-    '생활관지원팀':['최도윤','박현우 (오너·전체)']
-  };
-  function fillAssignees(){
-    const team=document.getElementById('teamSel').value;
-    const sel=document.getElementById('assigneeSel');
-    sel.innerHTML='';
-    if(!team){ sel.disabled=true; sel.innerHTML='<option value="">먼저 팀을 선택하세요</option>'; return; }
-    sel.disabled=false;
-    sel.insertAdjacentHTML('beforeend','<option value="">담당자 선택</option>');
-    teamMembers[team].forEach(m=> sel.insertAdjacentHTML('beforeend',`<option>${m}</option>`) );
+  function sendInvite(button){
+    if(!isOwner()){
+      showScenarioToast('오너만 초대 링크를 발송할 수 있습니다.');
+      return;
+    }
+    const email=document.getElementById('inviteEmail');
+    if(!email.value.trim() || !email.checkValidity()){
+      email.focus();
+      showScenarioToast('초대할 동료의 이메일을 확인해 주세요.');
+      return;
+    }
+    button.textContent='✓ 초대 링크 발송 완료';
+    setTimeout(()=>{ button.textContent='초대 링크 재발송'; },1400);
   }
 
   // 멤버 상세 모달 (UV-2)
   const members={
-    kim:{full:'박현우',av:'박현',role:'오너',roleCls:'owner',email:'international@seojeong.ac.kr',tag:'전체',active:'0건',joined:'2026-02-18',status:'온라인',statusCls:'st-done',team:'유학생입학팀'},
-    lee:{full:'김서윤',av:'김서',role:'멤버',roleCls:'',email:'admission@seojeong.ac.kr',tag:'입학',active:'2건',joined:'2026-03-02',status:'온라인',statusCls:'st-done',team:'유학생입학팀'},
-    park:{full:'이민지',av:'이민',role:'멤버',roleCls:'',email:'support@seojeong.ac.kr',tag:'장학금',active:'1건',joined:'2026-03-15',status:'자리비움',statusCls:'st-wait',team:'국제학생지원팀'},
-    jung:{full:'최도윤',av:'최도',role:'멤버',roleCls:'',email:'dormitory@seojeong.ac.kr',tag:'기숙사',active:'0건',joined:'2026-04-01',status:'오프라인',statusCls:'tag-etc',team:'생활관지원팀'}
+    kim:{full:'박현우',av:'박현',role:'오너',roleCls:'owner',email:'international@seojeong.ac.kr',active:'0건',joined:'2026-02-18',status:'온라인',statusCls:'st-done'},
+    lee:{full:'김서윤',av:'김서',role:'멤버',roleCls:'',email:'admission@seojeong.ac.kr',active:'2건',joined:'2026-03-02',status:'온라인',statusCls:'st-done'},
+    park:{full:'이민지',av:'이민',role:'멤버',roleCls:'',email:'support@seojeong.ac.kr',active:'1건',joined:'2026-03-15',status:'자리비움',statusCls:'st-wait'},
+    jung:{full:'최도윤',av:'최도',role:'멤버',roleCls:'',email:'dormitory@seojeong.ac.kr',active:'0건',joined:'2026-04-01',status:'오프라인',statusCls:'tag-etc'}
   };
   function openMember(key){
     const m=members[key];
@@ -1147,15 +1625,25 @@
     document.getElementById('mmFull').textContent=m.full;
     document.getElementById('mmEmail').textContent=m.email;
     const st=document.getElementById('mmStatus'); st.textContent=m.status; st.className='stchip '+m.statusCls;
-    document.getElementById('mmTag').textContent=m.tag;
     document.getElementById('mmActive').textContent=m.active;
     document.getElementById('mmJoined').textContent=m.joined;
-    document.getElementById('mmTeamSel').value=m.team;
-    document.getElementById('mmSaveNote').style.display='none';
     document.getElementById('memberModal').classList.add('show');
   }
   function closeMember(){ document.getElementById('memberModal').classList.remove('show'); }
-  function saveMemberTeam(){ document.getElementById('mmSaveNote').style.display='block'; }
+  document.querySelectorAll('.ccard').forEach(card=>{
+    card.tabIndex=0;
+    card.setAttribute('role','button');
+    card.addEventListener('keydown',event=>{
+      if(event.target===card && (event.key==='Enter' || event.key===' ')){
+        event.preventDefault();
+        card.click();
+      }
+    });
+  });
+  applyInboxFilter();
+  applyRoleScenario();
+  updateScenarioSummary();
+  toggleStudentInfo(false);
 </script>
 </body>
 </html>

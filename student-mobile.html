@@ -59,6 +59,14 @@
   .field label .req{color:var(--warn)}
   .field input,.field select{border:1px solid var(--line);border-radius:9px;padding:10px 12px;font-size:14px;font-family:var(--sans);background:#fff}
   .field .hint{font-size:11px;color:#8b96a5}
+  .verify-email-row,.verify-code-row{display:flex;gap:7px}
+  .verify-email-row input,.verify-code-row input{min-width:0;flex:1}
+  .verify-email-row button,.verify-code-row button{border:1px solid var(--brand);border-radius:9px;background:#fff;color:var(--brand);padding:0 11px;font:700 11px var(--sans);cursor:pointer;white-space:nowrap}
+  .verify-panel{border:1px solid var(--line2);border-radius:10px;background:#f8fafc;padding:10px;margin:-4px 0 12px}
+  .auth-status{margin-top:7px;border-radius:7px;padding:7px 9px;font-size:11px;line-height:1.45;background:#eef1f5;color:var(--ink2)}
+  .auth-status.success{background:#e7f6ec;color:#1a7f43}.auth-status.error{background:#fef3f2;color:var(--warn)}.auth-status.pending{background:#fff8e6;color:#8a6100}
+  .verify-panel .text-link{margin-top:7px;font-size:11px}
+  .btn:disabled{cursor:not-allowed;opacity:.45}
   .consent{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--ink2);margin:6px 0 14px}
   .btn{border-radius:10px;padding:12px 16px;font-size:14.5px;font-weight:700;cursor:pointer;border:1px solid transparent;width:100%}
   .btn-primary{background:var(--brand);color:#fff}
@@ -198,6 +206,15 @@
       <button data-v="vChat">ST-3 채팅방</button>
       <button data-v="vDocs">ST-4 문서</button>
       <button data-v="vMy">ST-5 마이</button>
+      <span class="lab">인증 상태</span>
+      <button data-auth-state="pending">대기</button>
+      <button data-auth-state="success">성공</button>
+      <button data-auth-state="failure">실패</button>
+      <button data-auth-state="expired">만료</button>
+      <span class="lab">상담 상태</span>
+      <button data-chat-state="대기">대기</button>
+      <button data-chat-state="진행중">진행</button>
+      <button data-chat-state="종료">종료</button>
       <a class="landing-back" href="index.html">← 랜딩페이지</a>
     </div>
   </div>
@@ -220,7 +237,7 @@
             <div class="field"><label>이메일</label><input type="email" placeholder="you@example.com" value="napat@example.com"></div>
             <div class="field"><label>비밀번호</label><input type="password" placeholder="비밀번호를 입력하세요" value="password123"></div>
             <div class="auth-row"><label><input type="checkbox" checked> 로그인 유지</label><button class="text-link" type="button">비밀번호 찾기</button></div>
-            <button class="btn btn-primary" onclick="showView('vFind')">로그인</button>
+            <button class="btn btn-primary" onclick="loginStudent()">로그인</button>
             <div class="auth-divider">또는</div>
             <button class="btn btn-ghost" onclick="showView('vSignup')">회원가입</button>
           </div>
@@ -231,15 +248,21 @@
           <div class="vpad">
             <span class="ix">ST-0</span>
             <h2 class="vt" style="margin-top:8px">회원가입<small>한국 유학, 대학과 직접 이야기하며 준비하세요</small></h2>
-            <div class="field"><label>이메일 <span class="req">*</span></label><input type="email" placeholder="you@example.com"><span class="hint">인증 코드가 발송됩니다</span></div>
+            <div class="field"><label>이메일 <span class="req">*</span></label><div class="verify-email-row"><input id="mobileSignupEmail" type="email" placeholder="you@example.com" value="napat@example.com"><button type="button" onclick="sendMobileVerificationCode()">인증 코드 발송</button></div><span class="hint">목업 인증 코드는 123456입니다</span></div>
+            <div class="verify-panel" aria-live="polite">
+              <div class="verify-code-row"><input id="mobileVerificationCode" inputmode="numeric" maxlength="6" placeholder="6자리 인증 코드"><button id="mobileVerifyButton" type="button" onclick="verifyMobileEmail()">인증 확인</button></div>
+              <div class="auth-status" id="mobileAuthStatus">이메일 인증 전입니다. 인증을 완료해야 회원가입할 수 있습니다.</div>
+              <button class="text-link" type="button" onclick="sendMobileVerificationCode()">인증 코드 재발송</button>
+            </div>
             <div class="field"><label>비밀번호 <span class="req">*</span></label><input type="password" placeholder="8자 이상"></div>
             <div class="field"><label for="signupCountry">국가 <span class="req">*</span></label><select id="signupCountry" onchange="updateSignupCities()"><option value="베트남">🇻🇳 베트남</option><option value="태국" selected>🇹🇭 태국</option><option value="중국">🇨🇳 중국</option><option value="우즈베키스탄">🇺🇿 우즈베키스탄</option><option value="몽골">🇲🇳 몽골</option></select></div>
             <div class="field"><label for="signupCity">도시 <span class="req">*</span></label><select id="signupCity"><option>방콕</option><option>치앙마이</option><option>콘깬</option></select><span class="hint">선택한 국가의 도시만 표시됩니다</span></div>
             <div class="field"><label>고등학교 <span class="req">*</span></label><input placeholder="학교명 검색" value="방콕 제1고등학교"><span class="hint">재학 중 또는 출신 학교</span></div>
+            <div class="field"><label>TOPIK / 한국어 수준 <span style="font-weight:500;color:var(--ink2)">(선택)</span></label><select><option>TOPIK 4급</option><option>TOPIK 1급</option><option>TOPIK 2급</option><option>TOPIK 3급 이상</option><option>미입력</option></select><span class="hint">미입력도 가능하며, 상담 시 대학에 기본 프로필로 표시됩니다.</span></div>
             <div class="field"><label>이름 (선택)</label><input placeholder="영문 이름 권장" value="NAPAT SUKSAI"></div>
             <div class="field"><label>희망 전공·입학 시기 (선택)</label><select><option>컴퓨터공학 · 2027년 3월</option></select></div>
-            <label class="consent"><input type="checkbox" checked> 개인정보 수집·이용에 동의합니다 <span class="req">*</span></label>
-            <button class="btn btn-primary" onclick="showView('vFind')">회원가입</button>
+            <label class="consent"><input type="checkbox" checked> 개인정보 수집·이용 및 상담 상대 대학에 국가·도시·TOPIK·고등학교 기본 프로필 제공에 동의합니다 <span class="req">*</span></label>
+            <button class="btn btn-primary" id="mobileSignupSubmit" disabled onclick="completeMobileSignup()">회원가입</button>
             <div style="text-align:center;margin-top:13px;font-size:11.5px;color:var(--ink2)">이미 계정이 있나요? <button class="text-link" onclick="showView('vLogin')">로그인</button></div>
           </div>
         </div>
@@ -498,7 +521,7 @@
             <div class="sheet-hd"><b>문서 업로드</b><button onclick="closeSheet('uploadSheet')">✕</button></div>
             <div class="sheet-bd">
               <div class="upload-summary">업로드할 문서의 카테고리를 먼저 선택해 주세요. 같은 카테고리에 추가한 문서는 버전별로 보관됩니다.</div>
-              <div class="field"><label for="mobileUploadCategory">카테고리 <span class="req">*</span></label><select id="mobileUploadCategory"><option>성적증명서</option><option>어학성적</option><option>졸업(예정)증명서</option><option>추천서</option><option>기타</option></select></div>
+              <div class="field"><label for="mobileUploadCategory">카테고리 <span class="req">*</span></label><select id="mobileUploadCategory"><option>성적증명서</option><option>어학성적</option><option>졸업(예정)증명서</option><option>기타</option></select></div>
               <div class="field"><label for="mobileUploadFile">파일 <span class="req">*</span></label><input id="mobileUploadFile" type="file" accept=".pdf,.jpg,.jpeg,.png"><span class="hint">PDF/JPG/PNG · 최대 10MB</span></div>
               <button class="btn btn-primary" onclick="uploadMobileDocument()">선택한 카테고리로 업로드</button>
             </div>
@@ -523,23 +546,97 @@
     city.replaceChildren(...signupCities[country].map(name=>new Option(name,name)));
   }
   const tabViews=['vFind','vChats','vDocs','vMy'];
-  function showView(id){
+  const protectedViews=new Set(['vFind','vChats','vChat','vDocs','vMy']);
+  let studentAuthenticated=false, mobileEmailAuthState='unverified';
+  const mobileAuthCopy={
+    unverified:['이메일 인증 전입니다. 인증을 완료해야 회원가입할 수 있습니다.',''],
+    pending:['인증 코드를 발송했습니다. 6자리 코드를 입력해 주세요.','pending'],
+    success:['이메일 인증이 완료되었습니다. 이제 회원가입할 수 있습니다.','success'],
+    failure:['인증 코드가 일치하지 않습니다. 다시 입력하거나 코드를 재발송해 주세요.','error'],
+    expired:['인증 코드가 만료되었습니다. 새 코드를 발송해 주세요.','error']
+  };
+  function renderMobileEmailAuth(){
+    const code=document.getElementById('mobileVerificationCode');
+    const verify=document.getElementById('mobileVerifyButton');
+    const status=document.getElementById('mobileAuthStatus');
+    const submit=document.getElementById('mobileSignupSubmit');
+    const [message,tone]=mobileAuthCopy[mobileEmailAuthState];
+    status.textContent=message; status.className='auth-status'+(tone?' '+tone:'');
+    const canVerify=mobileEmailAuthState==='pending'||mobileEmailAuthState==='failure';
+    code.disabled=!canVerify; verify.disabled=!canVerify;
+    submit.disabled=mobileEmailAuthState!=='success';
+    if(mobileEmailAuthState==='success') code.value='123456';
+    if(mobileEmailAuthState==='expired') code.value='123456';
+  }
+  function setMobileEmailAuthState(state, openSignup=true){
+    studentAuthenticated=false; mobileEmailAuthState=state;
+    renderMobileEmailAuth();
+    if(openSignup) showView('vSignup',true);
+  }
+  function sendMobileVerificationCode(){
+    setMobileEmailAuthState('pending',false);
+    const code=document.getElementById('mobileVerificationCode'); code.value=''; code.focus();
+  }
+  function verifyMobileEmail(){
+    const value=document.getElementById('mobileVerificationCode').value.trim();
+    setMobileEmailAuthState(value==='123456'?'success':'failure',false);
+  }
+  function completeMobileSignup(){
+    if(mobileEmailAuthState!=='success'){ setMobileEmailAuthState('unverified',false); return; }
+    studentAuthenticated=true; showView('vFind');
+  }
+  function loginStudent(){ studentAuthenticated=true; showView('vFind'); }
+  function showView(id, bypassAuth=false){
+    if(!bypassAuth&&protectedViews.has(id)&&!studentAuthenticated){
+      id='vSignup'; renderMobileEmailAuth();
+      const status=document.getElementById('mobileAuthStatus');
+      if(mobileEmailAuthState==='unverified') status.textContent='이메일 인증과 회원가입을 완료해야 대학 탐색과 상담을 이용할 수 있습니다.';
+    }
     document.querySelectorAll('.app-body > .view').forEach(v=>v.classList.remove('show'));
     document.getElementById(id).classList.add('show');
     document.getElementById('tabbar').style.display = (id==='vChat'||id==='vSignup'||id==='vLogin') ? 'none':'flex';
     document.querySelectorAll('#tabbar button').forEach(b=>b.classList.toggle('on', b.dataset.v===id));
     document.querySelectorAll('.scn button').forEach(b=>b.classList.toggle('on', b.dataset.v===id));
   }
-  document.querySelectorAll('.scn button').forEach(b=> b.addEventListener('click', ()=> showView(b.dataset.v)) );
+  document.querySelectorAll('.scn button[data-v]').forEach(b=> b.addEventListener('click', ()=> showView(b.dataset.v)) );
+  document.querySelectorAll('.scn button[data-auth-state]').forEach(b=> b.addEventListener('click', ()=>{
+    setMobileEmailAuthState(b.dataset.authState); b.classList.add('on');
+  }) );
+  document.querySelectorAll('.scn button[data-chat-state]').forEach(b=> b.addEventListener('click', ()=>{
+    studentAuthenticated=true; openChat('서정대학교',b.dataset.chatState); b.classList.add('on');
+  }) );
   document.querySelectorAll('#tabbar button').forEach(b=> b.addEventListener('click', ()=> showView(b.dataset.v)) );
+  renderMobileEmailAuth();
 
   const stMap={'대기':'st-wait','진행중':'st-live','종료':'st-done'};
+  const activeThreadMarkup=document.getElementById('thread').innerHTML;
+  let currentChatStatus='진행중', currentChatUniversity='서정대학교';
+  function renderChatState(){
+    const thread=document.getElementById('thread'), input=document.getElementById('chatInput'), composer=document.querySelector('#vChat .composer');
+    const contact=document.querySelector('#vChat .chat-hd .tt small');
+    composer.style.display='flex'; input.disabled=false;
+    if(currentChatStatus==='대기'){
+      contact.innerHTML='담당자 배정 대기 · 대학이 상담을 시작하면 알려드려요';
+      input.placeholder='추가 메시지 남기기';
+      thread.innerHTML=`<div class="day">오늘</div><div class="msg sys"><div class="bub">상담을 신청했어요. 대학은 내용을 확인할 수 있지만, 담당자가 상담을 시작하기 전까지는 읽지 않음으로 유지됩니다.</div></div><div class="msg me"><div><div class="bub">장학금 관련해서 문의드립니다.</div><div class="meta">보냄 · 아직 읽지 않음</div></div></div>`;
+    }else if(currentChatStatus==='종료'){
+      contact.innerHTML='상담이 종료되었습니다';
+      composer.style.display='none';
+      thread.innerHTML=`<div class="day">6월 30일</div><div class="msg sys"><div class="bub">상담이 종료되었습니다. 다시 상담하면 같은 채널의 새 상담 회차로 기록됩니다.</div></div><button class="btn btn-primary" style="margin:14px" onclick="reopenConsultation()">다시 상담하기</button>`;
+    }else{
+      contact.innerHTML='이수진 입학팀 · <span style="color:#1a7f43">●</span> 운영중';
+      input.placeholder='메시지를 입력하세요';
+      thread.innerHTML=activeThreadMarkup;
+    }
+  }
   function openChat(univ, st){
+    currentChatUniversity=univ; currentChatStatus=st;
     document.getElementById('chatUniv').textContent=univ;
     const chip=document.getElementById('chatSt');
     chip.textContent=st; chip.className='stchip '+stMap[st]+' st';
-    showView('vChat');
+    renderChatState(); showView('vChat');
   }
+  function reopenConsultation(){ openChat(currentChatUniversity,'대기'); }
   function toggleAtt(){ document.getElementById('attMenu').classList.toggle('show'); }
   function closeAtt(){ document.getElementById('attMenu').classList.remove('show'); }
   function openSheet(id){ document.getElementById(id).classList.add('show'); }
@@ -572,7 +669,7 @@
     if(empty) empty.remove();
     const versions=[...group.querySelectorAll('.vch')].map(el=>Number(el.textContent.replace('v',''))||0);
     const version=Math.max(0,...versions)+1;
-    const icons={'성적증명서':'📄','어학성적':'🗣️','졸업(예정)증명서':'🎓','추천서':'✍️','기타':'📎'};
+    const icons={'성적증명서':'📄','어학성적':'🗣️','졸업(예정)증명서':'🎓','기타':'📎'};
     const card=document.createElement('div');
     card.className='dcard';
     card.innerHTML=`<div class="di">${icons[category]||'📎'}</div><div class="db"><div class="dn"></div><div class="dm">방금 업로드 · ${formatFileSize(file.size)}</div><div class="sent">전송 전</div></div><span class="vch">v${version}</span>`;
@@ -596,12 +693,14 @@
   function sendMsg(){
     const el=document.getElementById('chatInput');
     if(!el.value.trim()) return;
-    addMe(`<div class="bub">${el.value.replace(/</g,'&lt;')}</div><div class="meta">전송됨 · 방금</div>`);
+    const stateMeta=currentChatStatus==='대기'?'보냄 · 아직 읽지 않음':'읽음 · 방금';
+    addMe(`<div class="bub">${el.value.replace(/</g,'&lt;')}</div><div class="meta">${stateMeta}</div>`);
     el.value='';
   }
   function sendDoc(name, meta){
     closeSheet('docPick');
-    addMe(`<div class="bub">📎 문서 보관함에서 전송<div class="doccard"><span class="di">📄</span><div><div class="dn">${name}</div><div class="dm">${meta}</div></div></div></div><div class="meta">전송됨 · 방금</div>`);
+    const stateMeta=currentChatStatus==='대기'?'보냄 · 아직 읽지 않음':'읽음 · 방금';
+    addMe(`<div class="bub">📎 문서 보관함에서 전송<div class="doccard"><span class="di">📄</span><div><div class="dn">${name}</div><div class="dm">${meta}</div></div></div></div><div class="meta">${stateMeta}</div>`);
   }
   function addMe(inner){
     const t=document.getElementById('thread');
@@ -621,6 +720,25 @@
       card.style.display=(field==='전체'||fields.includes(field))?'':'none';
     });
   }) );
+  function openUniversityDetail(univ, st){
+    let detail=document.getElementById('universityDetail');
+    if(!detail){
+      detail=document.createElement('div'); detail.className='modal-overlay'; detail.id='universityDetail';
+      detail.innerHTML=`<div class="sheet"><div class="sheet-hd"><b>대학 상세</b><button onclick="closeSheet('universityDetail')">✕</button></div><div class="sheet-bd" id="universityDetailBody"></div></div>`;
+      document.querySelector('.phone').appendChild(detail);
+    }
+    const card=[...document.querySelectorAll('#vFind .ucard')].find(item=>item.dataset.university===univ);
+    const logo=card.querySelector('.ulogo').textContent, meta=card.querySelector('.um').textContent;
+    const action=st==='진행중'?'대화 이어하기':'상담하기';
+    document.getElementById('universityDetailBody').innerHTML=`<div style="height:116px;border-radius:10px;background:linear-gradient(135deg,#b9c8d8,#e8edf3);display:grid;place-items:center;color:#52606d;font-size:11px">대학 배경 이미지</div><div style="display:flex;gap:10px;align-items:center;margin-top:-21px;padding:0 12px"><div class="ulogo" style="width:46px;height:46px;border:1px solid var(--line2);background:#fff;border-radius:12px;display:grid;place-items:center;font-size:21px">${logo}</div><div><b style="font-size:16px">${univ}</b><div style="font-size:11px;color:var(--ink2)">${meta} · 인증 대학</div></div></div><p style="font-size:12px;line-height:1.6">외국인 유학생의 한국 유학 준비를 입학부터 생활 안내까지 상담으로 돕습니다.</p><div class="pickitem" style="cursor:default"><span class="di">▤</span><div><div class="dn">2027 외국인 유학생 모집 브로셔</div><div class="dm">PDF · 모바일에서 바로 보기</div></div></div><p style="font-size:10.5px;color:var(--ink2)">대학 카드를 눌러도 상담은 시작되지 않습니다. 내용을 확인한 뒤 상담을 신청하세요.</p><button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="closeSheet('universityDetail');openChat('${univ}','${st}')">${action}</button>`;
+    openSheet('universityDetail');
+  }
+  document.querySelectorAll('#vFind .ucard').forEach(card=>{
+    const univ=card.dataset.university, st=card.querySelector('.cta.cont')?'진행중':'대기', button=card.querySelector('.cta');
+    card.removeAttribute('onclick'); button.removeAttribute('onclick'); button.classList.remove('cont'); button.textContent='상세 보기';
+    card.addEventListener('click',()=>openUniversityDetail(univ,st));
+    button.addEventListener('click',event=>{event.stopPropagation();openUniversityDetail(univ,st)});
+  });
   function toggleLang(el){
     const ko = el.innerHTML.includes('<b>한국어</b>');
     el.innerHTML = ko ? '한국어 / <b>EN</b>' : '<b>한국어</b> / EN';
